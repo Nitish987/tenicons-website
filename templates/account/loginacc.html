@@ -1,0 +1,66 @@
+{% extends 'account/base-auth.html' %}
+
+{% block css %}
+.container {
+    max-width: 500px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 100px;
+}
+.logo-img {
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+    width: 50%;
+    max-height: 100px;
+    max-width: 100px;
+}
+.logo-text {
+    text-align: center;
+}
+.submit-btn-container {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+{% endblock %}
+
+{% block body %}
+{% load static %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <img class="logo-img" src="{% static 'logo/tenicons-logo.jpg' %}" alt="tenicons_logo">
+    <h5 class="logo-text" class="mb-3"><b>Tenicons</b> | <small>login account</small></h5>
+    <form action="/account/" method="POST">
+        {% csrf_token %}
+        <div class="row mb-3">
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="email" class="form-control" placeholder="someone@email.com" id="email" name="email">
+            </div> 
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="password" class="form-control" placeholder="password" id="password" name="password">
+            </div>
+        </div>
+        <div class="col-sm-12 submit-btn-container">
+            <button type="submit" class="btn btn-primary" >Login</button>
+        </div>
+        <div class="submit-btn-container mt-2">
+            <a href="/account/createacc" class="link-text">New to Tenicons? Create Account</a>
+        </div>
+    </form>
+</div>
+<h5 class="link-text logo-text" style="padding: 10px 40px;"><b>2021 &copy; Tenicons</b> | <a href=""
+                    class="link-text">Privacy Policies</a></h5>
+{% endblock %}

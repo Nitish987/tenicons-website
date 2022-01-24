@@ -1,0 +1,183 @@
+{% extends 'account/base-auth.html' %}
+
+{% block css %}
+.container {
+    max-width: 500px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 100px;
+}
+.logo-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-height: 100px;
+    max-width: 100px;
+}
+.logo-text {
+    text-align: center;
+}
+.submit-btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#resend-otp:hover {
+    color: blue;
+    cursor: pointer;
+}
+.text {
+    text-decoration: none;
+    color: grey;
+}
+.text:hover {
+    color: blue;
+}
+{% endblock %}
+
+{% block jquery_src %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block body %}
+{% load static %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <img class="logo-img" src="{% static 'logo/tenicons-logo.jpg' %}" alt="tenicons_logo">
+    <h5 class="logo-text" class="mb-1"><b>Tenicons</b> | <small>{{form_title}}</small></h5>
+    <h5 class="logo-text"><small id="form-message">{{form_message}}</small></h5>
+
+    {% if form %}
+    <form action="/account/createacc/" method="POST" class="mt-4">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" class="form-control" placeholder="First name" aria-label="First name" id="firstname"
+                    name="firstname">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Last name" aria-label="Last name" id="lastname"
+                    name="lastname">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="email" class="form-control" placeholder="someone@email.com" id="email" name="email">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="password" class="form-control" placeholder="create password" id="password" name="password">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="password" class="form-control" placeholder="verify password" id="repassword"
+                    name="repassword">
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" value="True" id="TAC" name="TAC">
+            <label class="form-check-label" for="TAC">Accept <a class="text" href="#" target="_blank">Terms and Conditions</a></label>
+        </div>
+        <input type="hidden" name="form_check" id="form_check" value="{{form}}">
+        <div class="col-sm-12 submit-btn-container">
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </div>
+    </form>
+    {% else %}
+    <form action="/account/createacc/" method="POST">
+        {% csrf_token %}
+        <div class="row mb-3">
+        </div>
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <input type="number" class="form-control" placeholder="6-digit-OTP" id="otp" name="otp">
+                <span>session ends in : <small id="timer" class="logo-text">60</small></span>
+                <p><small id="resend-otp">Resend OTP</small></p>
+            </div>
+        </div>
+        <input type="hidden" name="form_check" id="form_check" value="{{form}}">
+        <input type="hidden" name="username" id="username" value="{{username}}">
+        <input type="hidden" name="email-u" id="email-u" value="{{email}}">
+        <div class="col-sm-12 submit-btn-container">
+            <button type="submit" class="btn btn-primary">Verify Account</button>
+        </div>
+    </form>
+    <script>
+        const timer = document.getElementById("timer");
+
+        let count = '******';
+        countDownTimer(60);
+
+        function countDownTimer(sec) {
+            let i = sec;
+            count = setInterval(() => {
+                timer.innerHTML = `${i--}`;
+                if (i == -1) {
+                    clearInterval(count);
+                    const username = document.getElementById("username").value;
+                    changeotpstate(username);
+                }
+            }, 1000);
+        }
+
+        function changeotpstate(username) {
+            const data = {
+                "username": username,
+                "csrfmiddlewaretoken": "{{csrf_token}}"
+            };
+            $.post("/account/changeotpstate/", data, (response, status) => {
+                if (status == "success") {
+                    if (response == "done") {
+                        const check = confirm("Session ended! please go back for new otp request.");
+                        if (check == true) {
+                            history.go(-1);
+                        } else {
+                            alert("sorry, you should go back and refill the account details because session is ended.");
+                        }
+                    }
+                }
+            });
+        }
+
+        formMessage = document.getElementById('form-message');
+
+        sentotp = document.getElementById("resend-otp");
+        sentotp.addEventListener("click", (event, element) => {
+            clearInterval(count);
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email-u").value;
+            resendOTP(username, email);
+            formMessage.innerHTML = `sending OTP.....`;
+        });
+        function resendOTP(username, email) {
+            const data = {
+                "username": username,
+                "email": email,
+                "csrfmiddlewaretoken": "{{csrf_token}}"
+            };
+            $.post("/account/sendotp/", data, (response, status) => {
+                if (status == "success") {
+                    if (response == "done") {
+                        countDownTimer(60);
+                        formMessage.innerHTML = `Enter OTP sent to email ${email} and your username ${username}, again`;
+                    }
+                }
+            });
+        }
+    </script>
+    {% endif %}
+</div>
+<h5 class="link-text logo-text" style="padding: 10px 40px;"><b>2021 &copy; Tenicons</b> | <a href=""
+        class="link-text">Privacy Policies</a></h5>
+{% endblock %}

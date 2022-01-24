@@ -1,0 +1,185 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Tenicons | Account{% endblock %}
+
+{% block css %}
+.container {
+    max-width: 500px;
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 100px auto;
+}
+.center_img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-height: 150px;
+    max-width: 150px;
+}
+.c-text {
+    text-align: center;
+}
+.submit-btn-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.c-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+{% endblock %}
+
+{% block jquery_src %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block home %}{% endblock %}
+{% block about %}{% endblock %}
+{% block contact %}{% endblock %}
+
+{% block body %}
+{% load static %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+        <strong>{{message}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <img class="center_img" style="border-radius: 50%;" src="{{profile_pic_url}}" alt="profile_pic">
+    <h5 class="c-text mb-3" style="margin-top: 10px;"><b>Name</b> | <small>Username</small></h5>
+    <div class="list-group">
+        <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight-1" aria-controls="offcanvasRight">Settings</button>
+        <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight-2" aria-controls="offcanvasRight">Uploads</button>
+        <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight-3" aria-controls="offcanvasRight">Downloads</button>
+        <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasRight-4" aria-controls="offcanvasRight">Liked</button>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight-1" aria-labelledby="offcanvasRightLabel-1">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel-1">Account Settings</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="accordion" id="accordion-options">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Change Profile Pic
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordion-options">
+                        <div class="accordion-body">
+                            <form action="/profile/" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input type="hidden" name="form-type" value="profile-pic-form">
+                                    <input type="file" class="form-control" id="profile-img-file" name="profile-img-file" aria-describedby="inputGroupFileAddon" aria-label="Upload" accept="image/*">
+                                    <button class="btn btn-outline-secondary" type="submit"
+                                        id="change-image-btn">Change</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Change Account Password
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                        data-bs-parent="#accordion-options">
+                        <div class="accordion-body">
+                            <form method="POST" action="/profile/">
+                                {% csrf_token %}
+                                <input type="hidden" name="form-type" value="password-change-form">
+                                <div class="mb-3">
+                                    <label for="current_password" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="current_password" name="current_password" placeholder="current password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new_password" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="new_password"
+                                        name="new_password" placeholder="new password">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="re_password" class="form-label">Verify Password</label>
+                                    <input type="password" class="form-control" id="re_password"
+                                        name="re_password" placeholder="verify password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Other Settings
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                        data-bs-parent="#accordion-options">
+                        <div class="accordion-body">
+                            Other settings coming soon
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight-2" aria-labelledby="offcanvasRightLabel-2">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel-2">Uploads</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <img class="center_img" src="{% static 'home/uploads.png' %}" alt="uploads">
+                <h5 class="c-text mb-3" style="margin-top: 10px;">click to see your uploads</h5>
+                <p class="c-text">here you can upload your icons, wallpapers, images and illustrations and make them publicily available around the world</p>
+                <a class="btn btn-primary c-button" href="/uploads">Uploads</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight-3" aria-labelledby="offcanvasRightLabel-3">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel-3">Downloads</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            ...
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight-4" aria-labelledby="offcanvasRightLabel-4">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel-4">Liked</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            ...
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}

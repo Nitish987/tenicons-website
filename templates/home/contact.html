@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Tenicons | Contact{% endblock %}
+
+{% block css %}
+.box {
+    margin: 20px
+}
+.container {
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 20px;
+}
+{% endblock %}
+
+{% block home %}{% endblock %}
+{% block about %}{% endblock %}
+{% block contact %}active{% endblock %}
+
+{% block body %}
+<div class="box">
+    <div class="container">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="mb-3">
+            <h4>Contact us</h4>
+        </div>
+        <form action="/" >
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="text" class="form-label">Your Question text here</label>
+                <textarea class="form-control" id="text" name="text" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}{% endblock %}
