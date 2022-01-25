@@ -3,7 +3,9 @@ Simple image distribution website, in django. User can get free images and able 
 ### Required fields in settings.py
 
 ##### secret key
+```
 SECRET_KEY = 'YOUR_SECRET_KEY'
+```
 
 ##### database setup 
 Setting up mysql database or do your own setup
