@@ -1,4 +1,4 @@
-Simple image distribution website, in djnago. User can get free images and able to upload and download images from the site.
+Simple image distribution website, in django. User can get free images and able to upload and download images from the site.
 
 ### Required fields in settings.py
 
